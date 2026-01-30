@@ -8,7 +8,7 @@ Ziel des Projekts ist die Entwicklung einer einfachen, nachvollziehbaren Anwendu
 
 ## Team
 - Laurenz Brödemann – Matrikelnummer: 77211922572  
-- Hassan Kandil – Matrikelnummer: XXXXXXX  
+- Elhasan Kandil – Matrikelnummer: 77211982350  
 
 ## Abgabeinhalte
 Dieses Repository enthält:
