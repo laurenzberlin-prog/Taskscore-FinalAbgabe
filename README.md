@@ -2,7 +2,7 @@
 
 ## Projektbeschreibung
 TaskScore ist eine webbasierte Task-Management-Anwendung zur Wochenplanung.  
-Nutzer können Aufgaben auf Wochentage verteilen, Punkte vergeben und ihren Fortschritt visuell verfolgen.
+Nutzer können Aufgaben auf Wochentage verteilen und nutzen hierfür ein Punktesystem, um sich eingenständig Prioriäten zu setzen und den Zeitaufwand der Tasks einzuschätzen. Fortschritte der geplanten Aufgaben sind dauerhaft visuell dargestellt.
 
 Ziel des Projekts ist die Entwicklung einer einfachen, nachvollziehbaren Anwendung zur Selbstorganisation.
 
@@ -12,8 +12,9 @@ Ziel des Projekts ist die Entwicklung einer einfachen, nachvollziehbaren Anwendu
 
 ## Abgabeinhalte
 Dieses Repository enthält:
-- Quellcode der Anwendung  
+- Quellcode der Anwendung
 - Ausführliche Projektdokumentation
+- Value Proposition
 - Anleitung zum Ausführen der Anwendung
 - Präsentationsfolien (PDF)  
 - Quellenverzeichnis   
