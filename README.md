@@ -18,8 +18,10 @@ Dieses Repository enthält:
 - Quellenverzeichnis   
 
 ## Veröffentlichtes Projekt
-Website / Demo:  
-➡️ http://127.0.0.1:5000
+Website / Demo:
+Lokaler Start der Anwendung über:
+http://127.0.0.1:5000/
+(Die Anwendung ist eine lokale Flask-Webapp und wird nach Installation der Abhängigkeiten lokal ausgeführt.)
 
 ## Rechtliche Erklärung
 Die eidesstattliche Erklärung aller Teammitglieder befindet sich unter:  
