@@ -19,7 +19,7 @@ Dieses Repository enthält:
 
 ## Veröffentlichtes Projekt
 Website / Demo:  
-➡️ https://HIER-DEIN-LINK
+➡️ http://127.0.0.1:5000/
 
 ## Rechtliche Erklärung
 Die eidesstattliche Erklärung aller Teammitglieder befindet sich unter:  
