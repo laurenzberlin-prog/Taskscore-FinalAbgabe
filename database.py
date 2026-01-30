@@ -176,9 +176,6 @@ def toggle_task_status(task_id, user_id):
                 "UPDATE tasks SET rewarded = 1 WHERE id = ? AND user_id = ?",
                 (task_id, user_id)
             )
-            conn.execute(
-                "UPDATE stats SET done_score = done_score + 1 WHERE id = 1"
-            )
 
 
 def delete_task(task_id, user_id):
@@ -187,6 +184,7 @@ def delete_task(task_id, user_id):
             "DELETE FROM tasks WHERE id = ? AND user_id = ?",
             (task_id, user_id)
         )
+
 
 def get_done_task_count(user_id):
     with get_connection() as conn:

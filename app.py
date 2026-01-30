@@ -142,7 +142,7 @@ def api_status():
         "budget": BUDGET,
         "current_total": get_total_points(uid),
         "done_points": get_done_points(uid),
-        "done_score": get_done_score(),
+        "done_score": get_done_task_count(uid),
         "task_count": len(get_all_tasks(uid))
     })
 

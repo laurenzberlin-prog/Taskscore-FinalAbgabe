@@ -13,23 +13,21 @@
     main{
         max-width:900px;margin:24px auto;padding:0 16px 32px}
     .card{
-        background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin:0 0 16px}
+        background:#7ce1ff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin:0 0 16px}
     .nav a{
-        margin-right:24px;text-decoration:none;color:#2563eb;font-weight:500}
+        display:inline-block;margin-right:5px;text-decoration:none;color:#ff0000;font-weight:500;padding:8px 14px;border:2px solid #000000;border-radius:10px;transition:0.2s;background:white}
+    .nav a:hover{
+        background:#2563eb;color:white;}
     .muted{
         color:#6b7280;font-size:.92rem}
-
     .kpis{
         display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
-    @media (
-        max-width:760px){.kpis{grid-template-columns:1fr}}
     .kpi{
-        border:1px solid #e5e7eb;border-radius:12px;padding:12px 14px}
+        border:1px solid #e5e7eb;border-radius:12px;padding:12px 14px;background:#ffffff}
     .kpi .label{
         font-size:.85rem;color:#6b7280}
     .kpi .value{
         font-size:1.2rem;font-weight:700;margin-top:4px}
-
     .progress-wrap{
         margin-top:12px}
     .progress-bar{
@@ -46,7 +44,7 @@
 
   <main>
     <section class="card nav">
-      <a href="/">Start</a>
+      <a href="/">Hauptmenü</a>
       <a href="/tasks">Aufgaben</a>
       <a href="/plan">Wochenplan</a>
     </section>
@@ -63,15 +61,15 @@
       <div class="kpis">
         <div class="kpi">
           <div class="label">Wochenbudget</div>
-          <div class="value">{{ total_points }}</div>
+          <div class="value">{{ total_points }}💰</div>
         </div>
         <div class="kpi">
           <div class="label">Erledigte Punkte</div>
-          <div class="value">{{ done_points }}</div>
+          <div class="value">{{ done_points }}✅</div>
         </div>
         <div class="kpi">
           <div class="label">Fortschritt</div>
-          <div class="value">{{ percent|round(0) }}%</div>
+          <div class="value">{{ percent|round(0) }}% 🚀</div>
         </div>
       </div>
 
