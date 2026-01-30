@@ -13,7 +13,8 @@ Ziel des Projekts ist die Entwicklung einer einfachen, nachvollziehbaren Anwendu
 ## Abgabeinhalte
 Dieses Repository enthält:
 - Quellcode der Anwendung  
-- Ausführliche Projektdokumentation  
+- Ausführliche Projektdokumentation
+- Anleitung zum Ausführen der Anwendung
 - Präsentationsfolien (PDF)  
 - Quellenverzeichnis   
 
