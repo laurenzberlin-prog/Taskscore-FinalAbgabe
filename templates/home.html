@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>TaskScore – Startseite</title>
+  <style>
+    body{
+<<<<<<< HEAD
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;margin:0;padding:0;background:#f4f5f7
+    }
+
+    header{
+      background:#1f2933;color:#fff;padding:16px 24px
+    }
+
+    header h1{
+        margin:0;font-size:1.6rem
+    }
+
+    main{
+      max-width:900px;margin:24px auto;padding:0 16px 32px
+    }
+
+    .card{
+      background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin:0 0 16px
+    }
+
+    .nav-links a{
+      margin-right:24px;text-decoration:none;color:#2563eb;font-weight:500
+    }
+
+    .meta{
+      font-size:.85rem;color:#4b5563
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>TaskScore</h1>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Überblick</h2>
+      <p>
+        Mit Hilfe von "TaskScore" wird einem die Möglichkeit geboten, seine wöchentlichen
+        To-Do's fest zu planen. Ein begrenztes Punktekonto dient der Priorisierung von Aufgaben.
+        So hat man immer einen Überblick darüber, wie viel Zeit und Energie man noch für wichtige
+        Aufgaben investieren muss. Bitte nutze die untenstehenden Navigationstools zum Anlegen
+        von Aufgaben, dem Einsehen des Wochenplans sowie um deinen Fortschritt zu sehen.
+=======
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;margin:0;padding:0;background:#ffffff
+    }
+    header{
+      background:#1f2933;color:#ffffff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;
+    }
+    .score{
+      display:inline-flex; align-items:center; justify-content:center;width:50px;height:50px;border-radius:999px;background:#ea0202;color:#ffffff;font-weight:700;font-size:2rem;
+    }
+    header h1{
+        margin:0;font-size:1.6rem
+    }
+    main{
+      max-width:900px;margin:24px auto;padding:0 16px 32px
+    }
+    .card{
+      background:#7ce1ff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin:0 0 16px
+    }
+    .nav a{
+      display:inline-block;margin-top:5px;margin-right:5px;text-decoration:none;color:#f60000;font-weight:500;padding:8px 14px;border:2px solid #000000;border-radius:10px;transition:0.2s;background:white;
+    }
+    .nav a:hover {
+      background:#2563eb;color:white;
+    }
+    .nav .logout{
+      color:#ff0000;font-weight:600;}
+    .muted{
+      color:hsl(220, 25%, 88%);font-size:.9rem
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>TaskScore-Startseite</h1>
+    <div class="score" title="Bisher erledigte Aufgaben">
+      {{ done_score or 0 }}
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Die Vision von TaskScore</h2>
+      <p>
+        Plane und erledige endlich deine wirklich wichtigen To-Do's! Hab jederzeit deinen Leistungsfortschritt und offene Aufgaben im Blick. Kein Aufschieben, keine Ausreden! ✅
+      </p>
+      <p>Priorisiere das was zählt mit eine wöchtenlichen Punktebudget nach Relevanz und Zeitaufwand!</p>
+      <p>
+        Füttere deine TaskScore oben rechts mit dem Abschließen von Aufgaben!!🚀🚀
+      </p>
+      <p>
+        Bitte nutze die Navigation unten👇, um deine Aufgaben zu verwalten, deinen Wochenplan einzusehen sowie deine bisherigen Fortschritte zu verfolgen.
+>>>>>>> 6197ea8 (Finale Version mit Login, userbezogenen Tasks und UI)
+      </p>
+    </section>
+
+    <section class="card">
+<<<<<<< HEAD
+      <h2>Wochenbudget</h2>
+      <p class="meta">
+        {{ current_total }} von {{ budget }} Punkten verwendet
+=======
+      <h2>Wochenbudget- Leg jetzt los und nutze deine freie Zeit! 💪🏼</h2>
+      <p>
+        <u><i><strong>{{ current_total }} von {{ budget }} Punkten verwendet!</strong></i></u>
+>>>>>>> 6197ea8 (Finale Version mit Login, userbezogenen Tasks und UI)
+      </p>
+    </section>
+
+    <section class="card">
+<<<<<<< HEAD
+      <h2>Navigation</h2>
+      <div class="nav-links">
+        <a href="/tasks">Aufgaben verwalten</a>
+        <a href="/plan">Wochenplan ansehen</a>
+        <a href="/progress">Fortschritt anzeigen</a>
+=======
+      <h2>Navigation 🧭</h2>
+      <div class="nav">
+        <a href="/tasks">Aufgaben verwalten</a>
+        <a href="/plan">Wochenplan ansehen</a>
+        <a href="/progress">Fortschritt anzeigen</a>
+        <a href="/logout" class="logout">Logout</a>
+>>>>>>> 6197ea8 (Finale Version mit Login, userbezogenen Tasks und UI)
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>

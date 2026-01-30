@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskScore – Aufgaben</title>
+  <style>
+    body{
+        font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;margin:0;padding:0;background:#f4f5f7}
+    header{
+        background:#1f2933;color:#fff;padding:16px 24px}
+    header h1{
+        margin:0;font-size:1.6rem}
+    main{
+        max-width:900px;margin:24px auto;padding:0 16px 32px}
+    .card{
+        background:#7ce1ff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin:0 0 16px}
+    .nav a{
+        display:inline-block;margin-right:5px;text-decoration:none;color:#ff0000;font-weight:500;padding:8px 14px;border:2px solid #000000;border-radius:10px;transition:0.2s;background:white}
+    .nav a:hover {
+      background:#2563eb;color:white;}
+    .muted{
+        color:#6b7280;font-size:.9rem}
+    label{
+        display:block;font-size:.9rem;margin-top:10px}
+    input,select,textarea{
+        width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid #d1d5db;margin-top:6px;font-size:.95rem;background:#fff}
+    textarea{
+      min-height:90px;resize:vertical}
+    button{
+        display:inline-block;margin-top:5px;margin-right:5px;text-decoration:none;color:#ff0000;font-weight:500;padding:8px 14px;border:2px solid #000000;border-radius:10px;background:white;cursor:pointer;transition:0.2s;font-family:inherit;font-size:0.95rem;line-height:1.2;}
+    button:hover {
+      background:#2563eb;color:white;
+    }
+    table{
+        width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{
+        text-align:left;padding:10px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+    th{
+        font-size:.85rem;color:#374151}
+    .alert-error{
+        margin-bottom:12px;padding:10px 14px;background:#fee2e2;color:#991b1b;border-radius:10px;font-size:.9rem}
+    .btn-pill{
+        margin-top:0;padding:4px 10px;font-size:.8rem;border-radius:999px;border:0;cursor:pointer}
+    .status-done{
+        background:#00b03e;color:#ffffff}
+    .status-open{
+        background:#f90000;color:#ffffff}
+    .btn-delete{
+        background:#ffffff;color:#000000}
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>TaskScore – Aufgaben</h1>
+  </header>
+
+  <main>
+    <section class="card nav">
+      <a href="/">Hauptmenü</a>
+      <a href="/plan">Wochenplan ansehen</a>
+      <a href="/progress">Fortschritt ansehen</a>
+    </section>
+
+    <section class="card">
+      <h2>Neue Aufgabe anlegen</h2>
+
+      <p class="h2"><u><i><strong>{{ current_total }}/ {{ budget }} Punkte verwendet</strong> </i> </u></p>
+      <p class="label"><strong>Kleiner Tipp 💭: Rechne mit maximal 14-15 Punkten pro Tag.</strong></p>
+      <!--Error msg -->
+      {% if error %}
+        <div class="alert-error">{{ error }}</div>
+      {% endif %}
+      <!--Aufgabe hinzufügen-->
+      <form method="post" action="/tasks">
+        <label>Titel ⚒️</label>
+        <input name="title" required>
+
+        <label>Beschreibung ✒️</label>
+        <textarea name="description"></textarea>
+
+        <label>Wochentag 🗓️</label>
+        <select name="weekday" required>
+          <option>Montag 💼</option><option>Dienstag 📊</option><option>Mittwoch ⏳</option>
+          <option>Donnerstag 🎯</option><option>Freitag 🏁</option><option>Samstag 🕺</option><option>Sonntag 🌿</option>
+        </select>
+
+        <label>Punkte💰</label>
+        <input type="number" name="points_total" value="0" min="0">
+
+        <button type="submit">Aufgabe hinzufügen</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Geplante Aufgaben</h2>
+
+      {% if tasks %}
+        <table>
+          <thead>
+            <tr>
+              <th>Titel</th><th>Tag</th><th>Punkte</th><th>Status</th><th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in tasks %}
+              <tr>
+                <td>
+                  <strong>{{ t.title }}</strong><br>
+                  <span class="muted">{{ t.description }}</span>
+                </td>
+                <td>{{ t.weekday }}</td>
+                <td>{{ t.points_total }}</td>
+
+              <!--Toggle-->
+                <td>
+                  <form method="post" action="/tasks/{{ t.id }}/toggle">
+                    <button type="submit"
+                      class="btn-pill {% if t.status == 'DONE' %}status-done{% else %}status-open{% endif %}">
+                      {{ t.status }}
+                    </button>
+                  </form>
+                </td>
+              <!--Delete-->
+                <td>
+                  <form method="post" action="/tasks/{{ t.id }}/delete">
+                    <button type="submit" class="btn-pill btn-delete">Löschen</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="muted">Noch keine Aufgaben vorhanden.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>
