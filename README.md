@@ -25,7 +25,7 @@ Lokaler Start der Anwendung über:
 http://127.0.0.1:5000/
 (Die Anwendung ist eine lokale Flask-Webapp und wird nach Installation (siehe unten) der Abhängigkeiten lokal ausgeführt.)
 
-## Lokale Installtion und Start der Anwendung
+## Lokale Installation und Start der Anwendung
 Diese Anleitung beschreibt Schritt für Schritt, wie die Anwendung auf einem Rechner installiert und gestartet werden kann.
 
 1. Benötigte Software installieren
