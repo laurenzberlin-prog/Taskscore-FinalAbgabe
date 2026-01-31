@@ -103,7 +103,17 @@ def get_all_tasks(user_id):
             SELECT id, title, description, weekday, points_total, status
             FROM tasks
             WHERE user_id = ?
-            ORDER BY id ASC
+            ORDER BY 
+              CASE weekday
+                WHEN 'Montag 💼' THEN 1
+                WHEN 'Dienstag 📊' THEN 2
+                WHEN 'Mittwoch ⏳' THEN 3
+                WHEN 'Donnerstag 🎯' THEN 4
+                WHEN 'Freitag 🏁' THEN 5
+                WHEN 'Samstag 🕺' THEN 6
+                WHEN 'Sonntag 🌿' THEN 7
+              END,
+              id ASC
         """, (user_id,)).fetchall()
 
     return [dict(r) for r in rows]

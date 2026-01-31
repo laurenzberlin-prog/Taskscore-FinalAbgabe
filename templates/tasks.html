@@ -47,6 +47,75 @@
         background:#f90000;color:#ffffff}
     .btn-delete{
         background:#ffffff;color:#000000}
+
+    .weekday-grid{
+        display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;
+    }
+    .weekday-grid label{
+        display:flex;align-items:center;gap:6px;font-size:.95rem;
+    }
+
+    /* Multi-Select Dropdown (Custom) */
+    .multi-dd{
+        position:relative;
+        margin-top:6px;
+    }
+
+    .multi-dd-btn{
+        width:100%;
+        box-sizing:border-box;
+        padding:10px;
+        border-radius:10px;
+        border:1px solid #d1d5db;
+        background:#fff;
+        text-align:left;
+        cursor:pointer;
+        font-family:inherit;
+        font-size:.95rem;
+        line-height:1.2;
+        color:#111827;
+    }
+
+    .multi-dd-btn:hover{
+        background:#f3f4f6;
+    }
+
+    .multi-dd-menu{
+        display:none;
+        position:absolute;
+        left:0;
+        right:0;
+        top:calc(100% + 6px);
+        background:#fff;
+        border:1px solid #d1d5db;
+        border-radius:10px;
+        box-shadow:0 6px 18px rgba(0,0,0,.12);
+        padding:10px;
+        z-index:50;
+        max-height:240px;
+        overflow:auto;
+    }
+
+    .multi-dd-menu label{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        padding:6px 6px;
+        cursor:pointer;
+        margin-top:0;
+        font-size:.95rem;
+        color:#111827;
+        border-radius:8px;
+    }
+
+    .multi-dd-menu label:hover{
+        background:#f3f4f6;
+    }
+
+    .multi-dd-menu input[type="checkbox"]{
+        width:auto;
+        margin:0;
+    }
   </style>
 </head>
 
@@ -68,11 +137,11 @@
 
       <p class="h2"><u><i><strong>{{ current_total }}/ {{ budget }} Punkte verwendet</strong> </i> </u></p>
       <p class="label"><strong>Kleiner Tipp 💭: Rechne mit maximal 14-15 Punkten pro Tag.</strong></p>
-      <!--Error msg -->
+
       {% if error %}
         <div class="alert-error">{{ error }}</div>
       {% endif %}
-      <!--Aufgabe hinzufügen-->
+
       <form method="post" action="/tasks">
         <label>Titel ⚒️</label>
         <input name="title" required>
@@ -80,11 +149,23 @@
         <label>Beschreibung ✒️</label>
         <textarea name="description"></textarea>
 
-        <label>Wochentag 🗓️</label>
-        <select name="weekday" required>
-          <option>Montag 💼</option><option>Dienstag 📊</option><option>Mittwoch ⏳</option>
-          <option>Donnerstag 🎯</option><option>Freitag 🏁</option><option>Samstag 🕺</option><option>Sonntag 🌿</option>
-        </select>
+        <label>Wochentage 🗓️</label>
+
+        <div class="multi-dd" id="weekdayDD">
+          <button type="button" class="multi-dd-btn" id="weekdayBtn">"Bitte wähle Wochentage aus</button>
+
+          <div class="multi-dd-menu" id="weekdayMenu">
+            <label><input type="checkbox" value="Montag 💼"> Montag 💼</label>
+            <label><input type="checkbox" value="Dienstag 📊"> Dienstag 📊</label>
+            <label><input type="checkbox" value="Mittwoch ⏳"> Mittwoch ⏳</label>
+            <label><input type="checkbox" value="Donnerstag 🎯"> Donnerstag 🎯</label>
+            <label><input type="checkbox" value="Freitag 🏁"> Freitag 🏁</label>
+            <label><input type="checkbox" value="Samstag 🕺"> Samstag 🕺</label>
+            <label><input type="checkbox" value="Sonntag 🌿"> Sonntag 🌿</label>
+          </div>
+
+          <input type="hidden" name="weekdays" id="weekdaysHidden">
+        </div>
 
         <label>Punkte💰</label>
         <input type="number" name="points_total" value="0" min="0">
@@ -113,7 +194,6 @@
                 <td>{{ t.weekday }}</td>
                 <td>{{ t.points_total }}</td>
 
-              <!--Toggle-->
                 <td>
                   <form method="post" action="/tasks/{{ t.id }}/toggle">
                     <button type="submit"
@@ -122,7 +202,7 @@
                     </button>
                   </form>
                 </td>
-              <!--Delete-->
+
                 <td>
                   <form method="post" action="/tasks/{{ t.id }}/delete">
                     <button type="submit" class="btn-pill btn-delete">Löschen</button>
@@ -137,5 +217,31 @@
       {% endif %}
     </section>
   </main>
+
+  <script>
+    const dd = document.getElementById("weekdayDD");
+    const btn = document.getElementById("weekdayBtn");
+    const menu = document.getElementById("weekdayMenu");
+    const hidden = document.getElementById("weekdaysHidden");
+    const checks = menu.querySelectorAll("input[type=checkbox]");
+
+    function updateLabel(){
+      const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+      hidden.value = selected.join("|");
+      btn.textContent = selected.length ? selected.join(", ") : "Tage auswählen…";
+    }
+
+    btn.addEventListener("click", () => {
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    });
+
+    checks.forEach(c => c.addEventListener("change", updateLabel));
+
+    document.addEventListener("click", (e) => {
+      if (!dd.contains(e.target)) menu.style.display = "none";
+    });
+
+    updateLabel();
+  </script>
 </body>
 </html>

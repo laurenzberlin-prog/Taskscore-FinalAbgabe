@@ -71,15 +71,22 @@ def show_tasks():
     if request.method == "POST":
         title = request.form["title"]
         description = request.form.get("description")
-        weekday = request.form["weekday"]
+
+        raw = request.form.get("weekdays", "").strip()
+        weekdays = [w for w in raw.split("|") if w]
+
         points = int(request.form.get("points_total") or 0)
         total = get_total_points(uid)
 
-        if total + points <= BUDGET:
-            insert_task(title, description, weekday, points, uid)
-            return redirect(url_for("show_tasks"))
-
-        error = f"Wochenbudget überschritten ({total + points}/{BUDGET})"
+        if not weekdays:
+            error = "Bitte mindestens einen Wochentag auswählen."
+        else:
+            needed = points * len(weekdays)
+            if total + needed <= BUDGET:
+                for day in weekdays:
+                    insert_task(title, description, day, points, uid)
+                return redirect(url_for("show_tasks"))
+            error = f"Wochenbudget überschritten ({total + needed}/{BUDGET})"
 
     return render_template(
         "tasks.html",
