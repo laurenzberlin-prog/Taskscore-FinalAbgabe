@@ -1,17 +1,6 @@
 # Data Model & Use Case Model – TaskScore
 
-Dieses Dokument beschreibt sowohl die **Datenstruktur (Data Model / UML)** als auch die
-**funktionalen Anwendungsfälle (Use Cases)** der Web-Anwendung TaskScore.
-
----
-
-## 1. Data Model (UML)
-
-Dieses UML-Diagramm beschreibt die Datenstruktur der Anwendung TaskScore.  
-Es basiert auf der SQLite-Datenbank (`taskscore.db`) und zeigt die zentralen Entitäten
-sowie deren Beziehungen.
-
-### UML Diagramm
+## Data Model (UML)
 
 ```mermaid
 classDiagram
@@ -42,34 +31,27 @@ class Stats {
 User "1" --> "0..*" Task : owns
 
 
-usecaseDiagram
-title TaskScore – Use Case Diagramm
+'## Use Case Model'
+flowchart LR
 
-actor User as U
+User((User))
 
-rectangle "TaskScore Web-App" {
-  (Registrieren)
-  (Einloggen)
-  (Ausloggen)
+Login[Login]
+Register[Register]
+AddTask[Create Task]
+DeleteTask[Delete Task]
+ViewTasks[View Tasks]
+ToggleTask[Mark Task as Done]
+ViewPlan[View Weekly Plan]
+ViewProgress[View Progress]
+Logout[Logout]
 
-  (Startseite ansehen)
-  (Aufgaben anzeigen)
-  (Aufgabe anlegen)
-  (Aufgabe als DONE/OPEN markieren)
-  (Aufgabe löschen)
-
-  (Wochenplan ansehen)
-  (Fortschritt ansehen)
-}
-
-U --> (Registrieren)
-U --> (Einloggen)
-U --> (Ausloggen)
-
-U --> (Startseite ansehen)
-U --> (Aufgaben anzeigen)
-U --> (Aufgabe anlegen)
-U --> (Aufgabe als DONE/OPEN markieren)
-U --> (Aufgabe löschen)
-U --> (Wochenplan ansehen)
-U --> (Fortschritt ansehen)
+User --> Login
+User --> Register
+User --> AddTask
+User --> DeleteTask
+User --> ViewTasks
+User --> ToggleTask
+User --> ViewPlan
+User --> ViewProgress
+User --> Logout
