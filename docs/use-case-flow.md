@@ -5,59 +5,70 @@ flowchart TD
 
 %% ENTRY
 A[Browser öffnet App] --> B{Session user_id vorhanden?}
-B -- Nein --> L[Login Screen\nGET /login\nrender_template('login.html')]
-B -- Ja --> H[Home Screen\nGET /\nrender_template('home.html')]
 
-%% LOGIN SCREEN
-L --> L1[User gibt username + password ein]
-L1 --> L2[POST /login]
-L2 --> L3[verify_user(username, password)\n(database.py)]
-L3 -->|ok -> user_id| L4[session['user_id']=user_id]
-L4 --> H
-L3 -->|None| L5[error='Login fehlgeschlagen'\nrender login.html]
+B -- Nein --> L[Login Screen<br>/login (GET)]
+B -- Ja --> H[Home Screen<br>/ (GET)]
 
-%% REGISTER SCREEN
-L --> R0[Link: Registrieren]
-R0 --> R[Register Screen\nGET /register\nrender_template('register.html')]
-R --> R1[User wählt username + password]
-R1 --> R2[POST /register]
-R2 --> R3[create_user(username, password)\n(database.py)]
-R3 -->|ok| L
-R3 -->|fail| R4[error z.B. 'Name vergeben'\nrender register.html]
+%% LOGIN
+L --> L1[User gibt Username + Passwort ein]
+L1 --> L2[Login absenden<br>/login (POST)]
+L2 --> L3{Credentials gültig?}
+L3 -- Nein --> L4[Fehlermeldung anzeigen<br>Login fehlgeschlagen]
+L4 --> L
+L3 -- Ja --> L5[Session setzen<br>session['user_id'] = user_id]
+L5 --> H
 
-%% HOME SCREEN
-H --> H1[Home zeigt Budget-Status\nget_total_points(user_id)]
-H --> H2[Home zeigt TaskScore\nget_done_task_count(user_id)]
-H --> NAV{Navigation}
+%% REGISTER
+L --> R[Register Screen<br>/register (GET)]
+R --> R1[User gibt Username + Passwort ein]
+R1 --> R2[Registrierung absenden<br>/register (POST)]
+R2 --> R3{Username frei + Passwort ok?}
+R3 -- Nein --> R4[Fehlermeldung anzeigen]
+R4 --> R
+R3 -- Ja --> R5[User anlegen in DB]
+R5 --> L
 
-NAV --> T[Tasks Screen\nGET /tasks\nget_all_tasks(user_id)\nrender 'tasks.html']
-NAV --> P[Plan Screen\nGET /plan\nget_weekly_points(user_id)\nrender 'plan.html']
-NAV --> PR[Progress Screen\nGET /progress\nget_total_points(user_id)\nget_done_points(user_id)\nrender 'progress.html']
-NAV --> LO[Logout\nGET /logout\nsession.pop('user_id')\nredirect /login]
+%% HOME
+H --> N1[Navigation: Tasks]
+H --> N2[Navigation: Weekly Plan]
+H --> N3[Navigation: Progress]
+H --> O[Logout<br>/logout (GET)]
 
-%% TASKS SCREEN ACTIONS
-T --> T1[Form: Neue Task]
-T1 --> T2[POST /tasks]
-T2 --> T3[get_total_points(user_id)]
-T3 --> T4{Budget ok? total+points <= 100}
-T4 -- Ja --> T5[insert_task(..., user_id)]
+O --> O1[Session löschen<br>session.pop('user_id')]
+O1 --> L
+
+%% TASKS SCREEN
+N1 --> T[Tasks Screen<br>/tasks (GET)]
+T --> T1[Neue Aufgabe ausfüllen]
+T1 --> T2[Aufgabe speichern<br>/tasks (POST)]
+T2 --> T3{Budget überschritten?}
+T3 -- Ja --> T4[Fehlermeldung anzeigen]
+T4 --> T
+T3 -- Nein --> T5[Task in DB speichern (user_id)]
 T5 --> T
-T4 -- Nein --> T6[error='Wochenbudget überschritten'\nrender tasks.html]
 
-T --> T7[Button: Status toggle]
-T7 --> T8[POST /tasks/<id>/toggle]
-T8 --> T9[toggle_task_status(task_id, user_id)]
-T9 --> T
+T --> T6[Task als DONE/OPEN toggeln]
+T6 --> T7[/tasks/<id>/toggle (POST)]
+T7 --> T8[Status ändern + ggf. Score erhöhen]
+T8 --> T
 
-T --> T10[Button: Löschen]
-T10 --> T11[POST /tasks/<id>/delete]
-T11 --> T12[delete_task(task_id, user_id)]
-T12 --> T
+T --> T9[Task löschen]
+T9 --> T10[/tasks/<id>/delete (POST)]
+T10 --> T11[Task löschen (nur eigener user_id)]
+T11 --> T
 
-%% PLAN SCREEN
-P --> P1[Zeigt Tabelle weekly_points\n(Jinja loop)]
-P1 --> NAV
+%% WEEKLY PLAN SCREEN
+N2 --> P[Weekly Plan Screen<br>/plan (GET)]
+P --> P1[Wochenpunkte pro Tag laden (nur user_id)]
+P1 --> P
 
 %% PROGRESS SCREEN
-PR --> PR1[berechnet percent\n(done_points / total_points * 100)]
-PR1 --> NAV
+N3 --> G[Progress Screen<br>/progress (GET)]
+G --> G1[Total Points + Done Points laden (nur user_id)]
+G1 --> G
+
+%% AUTH GUARD (vereinfachte Darstellung)
+T -->|wenn nicht eingeloggt| L
+P -->|wenn nicht eingeloggt| L
+G -->|wenn nicht eingeloggt| L
+H -->|wenn nicht eingeloggt| L
