@@ -75,6 +75,34 @@ Explizite Buttons (Submit / Toggle / Delete).
 - Klarer Request-Flow
 
 ---
+8. Aktuelle technische Probleme und deren Lösungen
+
+Während der finalen Entwicklungsphase traten mehrere praxisnahe Probleme auf.
+
+Problem 1: Aufgaben über mehrere Tage anlegen
+
+Problem:
+Ursprünglich konnte eine Aufgabe nur einem einzelnen Wochentag zugeordnet werden. Für wiederkehrende Aufgaben (z.B. „Sport“ an mehreren Tagen) war dies unpraktisch.
+
+Lösung:
+Ein eigenes Multi-Select-Dropdown wurde implementiert, mit dem mehrere Wochentage ausgewählt werden können. Im Backend wird daraus eine Liste erzeugt und für jeden Tag eine eigene Aufgabe gespeichert.
+
+Begründung:
+Die Datenbank bleibt normalisiert (eine Aufgabe = ein Tag), während die Benutzeroberfläche trotzdem komfortabel bleibt.
+
+⸻
+
+Problem 2: Score ging beim Löschen von Aufgaben verloren
+
+Problem:
+Wenn erledigte Aufgaben gelöscht wurden, wurde der Fortschritt (Done Score) zurückgesetzt.
+
+Lösung:
+Ein separates Feld rewarded sowie eine eigene Tabelle user_stats wurden eingeführt. Der Score wird nur einmal beim erstmaligen Erledigen erhöht und bleibt unabhängig vom Löschen der Aufgabe bestehen.
+
+Begründung:
+Dadurch wird historischer Fortschritt korrekt gespeichert und nicht durch spätere Aktionen verfälscht.
+
 
 ## Zusammenfassung
 
