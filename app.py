@@ -1,16 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
-from database import *
+from database import (
+    init_db,verify_user,create_user,get_total_points,get_user_done_score,get_all_tasks,insert_task,toggle_task_status,delete_task,get_weekly_points,get_done_points,
+)
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-change-me"
-init_db()
 
 BUDGET = 100
+init_db()
+
+
+def require_login():
+    return "user_id" in session
 
 
 @app.route("/")
 def start():
-    if "user_id" not in session:
+    if not require_login():
         return redirect(url_for("login"))
 
     uid = session["user_id"]
@@ -18,13 +24,14 @@ def start():
         "home.html",
         current_total=get_total_points(uid),
         budget=BUDGET,
-        done_score=get_user_done_score(uid)
+        done_score=get_user_done_score(uid),
     )
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -33,6 +40,7 @@ def login():
         if user_id:
             session["user_id"] = user_id
             return redirect(url_for("start"))
+
         error = "Login fehlgeschlagen."
 
     return render_template("login.html", error=error)
@@ -41,6 +49,7 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     error = None
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -61,7 +70,7 @@ def logout():
 
 @app.route("/tasks", methods=["GET", "POST"])
 def show_tasks():
-    if "user_id" not in session:
+    if not require_login():
         return redirect(url_for("login"))
 
     uid = session["user_id"]
@@ -70,42 +79,36 @@ def show_tasks():
     if request.method == "POST":
         title = request.form["title"]
         description = request.form.get("description")
-
         points = int(request.form.get("points_total") or 0)
-        total = get_total_points(uid)
 
-        raw_days = (request.form.get("weekdays") or "").strip()
-        if raw_days:
-            raw_days = raw_days.replace("|", ",")
-            weekdays = [d.strip() for d in raw_days.split(",") if d.strip()]
-        else:
-            weekday_single = request.form.get("weekday")
-            weekdays = [weekday_single] if weekday_single else []
+    
+        weekdays = request.form.getlist("weekdays")
 
         if not weekdays:
             error = "Bitte mindestens einen Wochentag auswählen."
         else:
+            total = get_total_points(uid)
             needed = points * len(weekdays)
 
             if total + needed <= BUDGET:
                 for day in weekdays:
                     insert_task(title, description, day, points, uid)
                 return redirect(url_for("show_tasks"))
-
-            error = f"Wochenbudget überschritten ({total + needed}/{BUDGET})"
+            else:
+                error = f"Wochenbudget überschritten ({total + needed}/{BUDGET})"
 
     return render_template(
         "tasks.html",
         tasks=get_all_tasks(uid),
         current_total=get_total_points(uid),
         budget=BUDGET,
-        error=error
+        error=error,
     )
 
 
 @app.route("/tasks/<int:task_id>/toggle", methods=["POST"])
 def toggle_task(task_id):
-    if "user_id" not in session:
+    if not require_login():
         return redirect(url_for("login"))
 
     uid = session["user_id"]
@@ -115,7 +118,7 @@ def toggle_task(task_id):
 
 @app.route("/tasks/<int:task_id>/delete", methods=["POST"])
 def delete_task_route(task_id):
-    if "user_id" not in session:
+    if not require_login():
         return redirect(url_for("login"))
 
     uid = session["user_id"]
@@ -125,7 +128,7 @@ def delete_task_route(task_id):
 
 @app.route("/plan")
 def weekly_plan():
-    if "user_id" not in session:
+    if not require_login():
         return redirect(url_for("login"))
 
     uid = session["user_id"]
@@ -134,31 +137,32 @@ def weekly_plan():
 
 @app.route("/progress")
 def progress():
-    if "user_id" not in session:
+    if not require_login():
         return redirect(url_for("login"))
 
     uid = session["user_id"]
     return render_template(
         "progress.html",
         total_points=get_total_points(uid),
-        done_points=get_done_points(uid)
+        done_points=get_done_points(uid),
     )
 
 
 @app.route("/api/status")
 def api_status():
-    if "user_id" not in session:
+    if not require_login():
         return jsonify({"error": "not logged in"})
 
     uid = session["user_id"]
-    return jsonify({
-        "budget": BUDGET,
-        "current_total": get_total_points(uid),
-        "done_points": get_done_points(uid),
-        "done_score": get_user_done_score(uid),
-        "task_count": len(get_all_tasks(uid))
-    })
-
+    return jsonify(
+        {
+            "budget": BUDGET,
+            "current_total": get_total_points(uid),
+            "done_points": get_done_points(uid),
+            "done_score": get_user_done_score(uid),
+            "task_count": len(get_all_tasks(uid)),
+        }
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
