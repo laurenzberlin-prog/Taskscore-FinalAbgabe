@@ -38,19 +38,23 @@ def init_db():
             pass
 
         conn.execute("""
-            CREATE TABLE IF NOT EXISTS stats (
-                id INTEGER PRIMARY KEY CHECK (id = 1),
-                done_score INTEGER NOT NULL DEFAULT 0
-            )
-        """)
-        conn.execute("INSERT OR IGNORE INTO stats (id, done_score) VALUES (1, 0)")
-
-        conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL UNIQUE,
                 password_hash TEXT NOT NULL
             )
+        """)
+
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS user_stats (
+                user_id INTEGER PRIMARY KEY,
+                done_score INTEGER NOT NULL DEFAULT 0
+            )
+        """)
+
+        conn.execute("""
+            INSERT OR IGNORE INTO user_stats (user_id, done_score)
+            SELECT id, 0 FROM users
         """)
 
 
@@ -65,9 +69,14 @@ def create_user(username, password):
 
     try:
         with get_connection() as conn:
-            conn.execute(
+            cur = conn.execute(
                 "INSERT INTO users (username, password_hash) VALUES (?, ?)",
                 (username, pw_hash)
+            )
+            new_user_id = cur.lastrowid
+            conn.execute(
+                "INSERT OR IGNORE INTO user_stats (user_id, done_score) VALUES (?, 0)",
+                (new_user_id,)
             )
         return True, "OK"
     except sqlite3.IntegrityError:
@@ -87,13 +96,6 @@ def verify_user(username, password):
 
     user_id, pw_hash = row
     return user_id if check_password_hash(pw_hash, password) else None
-
-
-def get_done_score():
-    with get_connection() as conn:
-        return conn.execute(
-            "SELECT done_score FROM stats WHERE id = 1"
-        ).fetchone()[0]
 
 
 def get_all_tasks(user_id):
@@ -186,6 +188,10 @@ def toggle_task_status(task_id, user_id):
                 "UPDATE tasks SET rewarded = 1 WHERE id = ? AND user_id = ?",
                 (task_id, user_id)
             )
+            conn.execute(
+                "UPDATE user_stats SET done_score = done_score + 1 WHERE user_id = ?",
+                (user_id,)
+            )
 
 
 def delete_task(task_id, user_id):
@@ -196,10 +202,10 @@ def delete_task(task_id, user_id):
         )
 
 
-def get_done_task_count(user_id):
+def get_user_done_score(user_id):
     with get_connection() as conn:
-        result = conn.execute(
-            "SELECT COUNT(*) FROM tasks WHERE status = 'DONE' AND user_id = ?",
+        row = conn.execute(
+            "SELECT done_score FROM user_stats WHERE user_id = ?",
             (user_id,)
-        ).fetchone()[0]
-    return result or 0
+        ).fetchone()
+    return row[0] if row else 0

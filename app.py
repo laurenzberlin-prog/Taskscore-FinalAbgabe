@@ -14,12 +14,11 @@ def start():
         return redirect(url_for("login"))
 
     uid = session["user_id"]
-
     return render_template(
         "home.html",
         current_total=get_total_points(uid),
         budget=BUDGET,
-        done_score=get_done_task_count(uid)
+        done_score=get_user_done_score(uid)
     )
 
 
@@ -72,20 +71,27 @@ def show_tasks():
         title = request.form["title"]
         description = request.form.get("description")
 
-        raw = request.form.get("weekdays", "").strip()
-        weekdays = [w for w in raw.split("|") if w]
-
         points = int(request.form.get("points_total") or 0)
         total = get_total_points(uid)
+
+        raw_days = (request.form.get("weekdays") or "").strip()
+        if raw_days:
+            raw_days = raw_days.replace("|", ",")
+            weekdays = [d.strip() for d in raw_days.split(",") if d.strip()]
+        else:
+            weekday_single = request.form.get("weekday")
+            weekdays = [weekday_single] if weekday_single else []
 
         if not weekdays:
             error = "Bitte mindestens einen Wochentag auswählen."
         else:
             needed = points * len(weekdays)
+
             if total + needed <= BUDGET:
                 for day in weekdays:
                     insert_task(title, description, day, points, uid)
                 return redirect(url_for("show_tasks"))
+
             error = f"Wochenbudget überschritten ({total + needed}/{BUDGET})"
 
     return render_template(
@@ -149,7 +155,7 @@ def api_status():
         "budget": BUDGET,
         "current_total": get_total_points(uid),
         "done_points": get_done_points(uid),
-        "done_score": get_done_task_count(uid),
+        "done_score": get_user_done_score(uid),
         "task_count": len(get_all_tasks(uid))
     })
 
