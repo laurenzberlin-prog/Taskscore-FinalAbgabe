@@ -44,7 +44,7 @@ Die Anwendung bietet folgende Kernfunktionen:
 - Anlegen neuer Aufgaben mit:
   - Titel  
   - Beschreibung  
-  - Wochentag  
+  - Wochentag(e) 
   - Punktwert  
 
 - Anzeige aller geplanten Aufgaben  
