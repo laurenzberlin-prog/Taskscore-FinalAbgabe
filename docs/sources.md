@@ -44,10 +44,11 @@ Bezug im Projekt:
 
 ---
 
-## 4) Passwort-Hashing / Werkzeug Security
+## 4) Login/Passwort-Hashing / Werkzeug Security
 - Werkzeug – `generate_password_hash`, `check_password_hash`:
   https://werkzeug.palletsprojects.com/en/latest/utils/#werkzeug.security.generate_password_hash
   https://werkzeug.palletsprojects.com/en/latest/utils/#werkzeug.security.check_password_hash
+- https://www.youtube.com/watch?v=71EU8gnZqZQ
 
 Bezug im Projekt:
 - `database.py`: Funktionen `create_user()` und `verify_user()` (Registrierung/Login)
