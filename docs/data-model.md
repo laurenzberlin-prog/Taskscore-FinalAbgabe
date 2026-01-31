@@ -30,8 +30,6 @@ class Stats {
 
 User "1" --> "0..*" Task : owns
 
-
-'## Use Case Model'
 flowchart LR
 
 User((User))
