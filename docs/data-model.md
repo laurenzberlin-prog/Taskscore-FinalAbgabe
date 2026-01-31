@@ -32,8 +32,9 @@ class Stats {
 }
 
 User "1" --> "0..*" Task : owns
+Stats "1" --> "0..*" Task : counts done
 
-## Beschreibung der Entitäten
+Beschreibung der Entitäten
 
 Im Datenmodell der Anwendung TaskScore existieren drei zentrale Entitäten: User, Task und Stats. Diese Entitäten bilden die Grundlage für die Speicherung von Benutzern, Aufgaben und globalen Statistikwerten.
 
@@ -45,12 +46,12 @@ Das Feld rewarded dient dazu, zu speichern, ob eine Aufgabe bereits zur Erhöhun
 
 Die Entität Stats speichert globale Statistikwerte der Anwendung. Aktuell wird hier lediglich der Wert done_score gespeichert, welcher die Gesamtanzahl aller jemals erledigten Aufgaben über alle Benutzer hinweg zählt. Diese Tabelle besitzt bewusst nur einen einzigen Datensatz mit der festen ID 1 und dient als einfache globale Statistik ohne Benutzerbezug.
 
-##Beziehungen zwischen den Entitäten
+
+Beziehungen zwischen den Entitäten
 
 Zwischen den Entitäten bestehen folgende Beziehungen:
-
-Ein User kann beliebig viele Tasks besitzen.
-Jede Task gehört genau zu einem User.
+	•	Ein User kann beliebig viele Tasks besitzen.
+	•	Jede Task gehört genau zu einem User.
 
 Diese Beziehung wird über das Attribut user_id in der Task-Tabelle realisiert, welches auf die ID eines Users verweist.
 
